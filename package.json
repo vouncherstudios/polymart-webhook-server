@@ -1,0 +1,19 @@
+{
+  "name": "polymart-webhook-server",
+  "version": "1.0.0",
+  "description": "A lightweight server to receive and validate Polymart webhooks, and forward the formatted information to a Discord channel.",
+  "scripts": {
+    "start": "pip3 install -U -r .requirements.txt -t .data/site-packages && env PYTHONPATH=$PWD/.data/site-packages python3 server.py"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": "9.x"
+  },
+  "license": "MIT",
+  "keywords": [
+    "node",
+    "glitch",
+    "polymart",
+    "discord"
+  ]
+}

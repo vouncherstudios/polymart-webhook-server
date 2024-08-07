@@ -1,0 +1,9 @@
+{
+  "install": {
+    "include": [
+      "^package\\.json$",
+      "^.requirements.txt$",
+      "^\\.env$"
+    ]
+  }
+}
