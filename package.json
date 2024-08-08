@@ -7,7 +7,7 @@
   },
   "dependencies": {},
   "engines": {
-    "node": "9.x"
+    "node": "16.x"
   },
   "license": "MIT",
   "keywords": [
