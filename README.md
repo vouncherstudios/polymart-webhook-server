@@ -35,10 +35,13 @@ These requirements is only applicable if you are running from outside Glitch.
    cp .env.example .env
    ```
 
-4. Update the `.env` file with your Polymart webhook secret and Discord webhook URL:
+4. Update the `.env` file with your Polymart webhook secrets and Discord webhook URL:
    ```env
-   WEBHOOK_SECRET=YOUR_SECRET
+   WEBHOOK_SECRET_SPLITTER=YOUR_SPLITTER
+   WEBHOOK_SECRETS=YOUR_SECRETS
    DISCORD_WEBHOOK_URL=YOUR_DISCORD_WEBHOOK_URL
+   DISCORD_PURCHASE_WEBHOOK_CONTENT=YOUR_DISCORD_WEBHOOK_CONTENT
+   DISCORD_REFUND_WEBHOOK_CONTENT=YOUR_DISCORD_WEBHOOK_CONTENT
    ```
 
 ## Glitch Setup
@@ -54,8 +57,11 @@ To set up the server on Glitch, follow these steps:
 4. Open the `.env` file and add the following configuration:
 
    ```env
-   WEBHOOK_SECRET=YOUR_SECRET
+   WEBHOOK_SECRET_SPLITTER=YOUR_SPLITTER
+   WEBHOOK_SECRETS=YOUR_SECRETS
    DISCORD_WEBHOOK_URL=YOUR_DISCORD_WEBHOOK_URL
+   DISCORD_PURCHASE_WEBHOOK_CONTENT=YOUR_DISCORD_WEBHOOK_CONTENT
+   DISCORD_REFUND_WEBHOOK_CONTENT=YOUR_DISCORD_WEBHOOK_CONTENT
    ```
 
 5. Finally, click on "Tools" again and select "Logs" to see the server logs. Your server should now be running on Glitch.
@@ -78,7 +84,8 @@ The server exposes a single endpoint `/` to receive POST requests from Polymart 
 
 ## Environment Variables
 
-- `WEBHOOK_SECRET`: Your Polymart webhook secret.
+- `WEBHOOK_SECRET_SPLITTER`: The webhook secret splitter. 
+- `WEBHOOK_SECRETS`: Your Polymart webhook secrets.
 - `DISCORD_WEBHOOK_URL`: The URL of your Discord webhook.
 - `DISCORD_PURCHASE_WEBHOOK_CONTENT`: The JSON payload template for purchase events.
 - `DISCORD_REFUND_WEBHOOK_CONTENT`: The JSON payload template for refund events.

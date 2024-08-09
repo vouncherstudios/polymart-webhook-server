@@ -9,7 +9,8 @@ from flask import Flask, request, jsonify
 # Load environment variables from .env file
 load_dotenv()
 
-WEBHOOK_SECRET = os.getenv('WEBHOOK_SECRET')
+WEBHOOK_SECRET_SPLITTER = os.getenv('WEBHOOK_SECRET_SPLITTER')
+WEBHOOK_SECRETS = os.getenv('WEBHOOK_SECRETS').split(WEBHOOK_SECRET_SPLITTER)
 DISCORD_WEBHOOK_URL = os.getenv('DISCORD_WEBHOOK_URL')
 
 DISCORD_PURCHASE_WEBHOOK_CONTENT = os.getenv('DISCORD_PURCHASE_WEBHOOK_CONTENT')
@@ -20,8 +21,8 @@ BASE_API_URL = "https://api.polymart.org/v1/"
 app = Flask(__name__)
 
 
-def verify_signature(data, signature):
-    computed_signature = hmac.new(WEBHOOK_SECRET.encode(), data, hashlib.sha256).hexdigest()
+def verify_signature(secret, data, signature):
+    computed_signature = hmac.new(secret.encode(), data, hashlib.sha256).hexdigest()
     return hmac.compare_digest(computed_signature, signature)
 
 
@@ -87,21 +88,22 @@ def server():
     signature = request.headers.get('X-Polymart-Signature')
     data = request.get_data()
 
-    if not verify_signature(data, signature):
-        return jsonify({'message': 'Invalid signature'}), 400
+    for secret in WEBHOOK_SECRETS:
+        if verify_signature(secret, data, signature):
+            content = request.json
 
-    content = request.json
+            event = content['event']
+            payload = content['payload']
 
-    event = content['event']
-    payload = content['payload']
+            if event == 'product.user.purchase':
+                send_discord_webhook(DISCORD_PURCHASE_WEBHOOK_CONTENT, payload)
 
-    if event == 'product.user.purchase':
-        send_discord_webhook(DISCORD_PURCHASE_WEBHOOK_CONTENT, payload)
+            if event == 'product.user.refund':
+                send_discord_webhook(DISCORD_REFUND_WEBHOOK_CONTENT, payload)
 
-    if event == 'product.user.refund':
-        send_discord_webhook(DISCORD_REFUND_WEBHOOK_CONTENT, payload)
+            return jsonify({'message': 'Webhook received and verified'}), 200
 
-    return jsonify({'message': 'Webhook received and verified'}), 200
+    return jsonify({'message': 'Invalid signature'}), 400
 
 
 if __name__ == '__main__':
