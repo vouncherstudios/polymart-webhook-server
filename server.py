@@ -65,16 +65,16 @@ def send_discord_webhook(webhook_content, payload):
         resource_thumbnail_url = resource_info['thumbnailURL']
 
         webhook_content = (webhook_content
-                           .replace("{USER_NAME}", user_name)
                            .replace("{USER_ID}", str(user_id))
+                           .replace("{USER_NAME}", user_name)
+                           .replace("{RESOURCE_ID}", str(resource_id))
                            .replace("{RESOURCE_TITLE}", resource_title)
                            .replace("{RESOURCE_CURRENCY}", resource_currency)
                            .replace("{RESOURCE_PRICE}", str(resource_price))
                            .replace("{RESOURCE_THUMBNAIL_URL}", resource_thumbnail_url))
 
-        headers = {
-            'Content-Type': 'application/json'
-        }
+        headers = {'Content-Type': 'application/json'}
+
         response = requests.post(DISCORD_WEBHOOK_URL, data=webhook_content, headers=headers)
         if response.status_code != 204:
             print(f"Failed to send webhook to Discord: {response.status_code}, {response.text}")
