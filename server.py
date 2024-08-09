@@ -95,6 +95,9 @@ def server():
             event = content['event']
             payload = content['payload']
 
+            if event == 'ping':
+                print("Received ping event")
+
             if event == 'product.user.purchase':
                 send_discord_webhook(DISCORD_PURCHASE_WEBHOOK_CONTENT, payload)
 
