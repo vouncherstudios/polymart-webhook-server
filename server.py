@@ -1,6 +1,10 @@
 import hashlib
 import hmac
 import os
+from collections import defaultdict
+
+# Global cache to store processed signatures
+processed_signatures = defaultdict(bool)
 
 import requests
 from dotenv import load_dotenv
@@ -90,6 +94,9 @@ def server():
 
     for secret in WEBHOOK_SECRETS:
         if verify_signature(secret, data, signature):
+            if processed_signatures[signature]:
+                return jsonify({'message': 'Signature already processed'}), 200
+
             content = request.json
 
             event = content['event']
@@ -103,6 +110,8 @@ def server():
 
             if event == 'product.user.refund':
                 send_discord_webhook(DISCORD_REFUND_WEBHOOK_CONTENT, payload)
+
+            processed_signatures[signature] = True
 
             return jsonify({'message': 'Webhook received and verified'}), 200
 
